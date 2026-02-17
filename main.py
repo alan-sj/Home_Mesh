@@ -1,13 +1,10 @@
 from fastapi import FastAPI
-from database import test_db
+from database import engine,Base
+from models import user
+from routers import users, categories
 
 app=FastAPI()
 
-@app.get("/")
-def read_root():
-    print("FastAPI Running")
-    return{"status": "FastAPI Running"}
-
-@app.get("/db-test")
-def db_test():
-    return test_db()
+Base.metadata.create_all(bind=engine)
+app.include_router(users.router)
+app.include_router(categories.router)
